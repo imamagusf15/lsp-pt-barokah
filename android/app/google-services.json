@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "663744110807",
+    "project_id": "pt-baroqah-tbk-8bb2b",
+    "storage_bucket": "pt-baroqah-tbk-8bb2b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:663744110807:android:61f3bae997475df756d092",
+        "android_client_info": {
+          "package_name": "com.example.lsp_pt_barokah"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "663744110807-71d1b5lniphoviqtotobqbp3hupifiu2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDcYRleauqMD9v_EK0JSUNInDZ9qmcZbFg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "663744110807-71d1b5lniphoviqtotobqbp3hupifiu2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
