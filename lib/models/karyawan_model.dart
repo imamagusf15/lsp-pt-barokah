@@ -1,47 +1,53 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Karyawan {
-  String? nip, nama, jabatan, jenisKelamin, alamat, noTelp;
-  int? gajiPokok;
-  double? bonusGaji;
-  DateTime? tglLahir;
+  String nip, nama, jabatan, jenisKelamin, alamat, noTelp;
+  int gajiPokok;
+  double bonusGaji;
+  DateTime tglLahir;
 
   Karyawan({
-    this.nip,
-    this.nama,
-    this.tglLahir,
-    this.jenisKelamin,
-    this.jabatan,
-    this.alamat,
-    this.noTelp,
-    this.gajiPokok,
-    this.bonusGaji,
+    required this.nip,
+    required this.nama,
+    required this.tglLahir,
+    required this.jenisKelamin,
+    required this.jabatan,
+    required this.alamat,
+    required this.noTelp,
+    required this.gajiPokok,
+    required this.bonusGaji,
   });
+
+  factory Karyawan.fromJson(Map<String, dynamic> json) {
+    return Karyawan(
+      nip: json['nip'],
+      nama: json['nama'],
+      tglLahir: (json['tgl_lahir'] as Timestamp).toDate(),
+      jenisKelamin: json['jenis_kelamin'],
+      jabatan: json['jabatan'],
+      alamat: json['alamat'],
+      noTelp: json['no_telp'],
+      gajiPokok: json['gaji_pokok'],
+      bonusGaji: json['bonus_gaji'],
+    );
+  }
+
+  Map<String, dynamic> karyawanToJson(Karyawan instance) {
+    return {
+      'nip': instance.nip,
+      'nama': instance.nama,
+      'tgl_lahir': instance.tglLahir,
+      'jenis_kelamin': instance.jenisKelamin,
+      'jabatan': instance.jabatan,
+      'alamat': instance.alamat,
+      'no_telp': instance.noTelp,
+      'gaji_pokok': instance.gajiPokok,
+      'bonus_gaji': instance.bonusGaji,
+    };
+  }
 }
 
 class ListKaryawan {
-  addKaryawan({
-    required String nip,
-    required String nama,
-    required String jabatan,
-    required DateTime tglLahir,
-    required String jenisKelamin,
-    required String alamat,
-    required String noTelp,
-    required int gajiPokok,
-    required double bonusGaji,
-  }) {
-    listDataKaryawan.add(Karyawan(
-      nip: nip,
-      nama: nama,
-      jabatan: jabatan,
-      tglLahir: tglLahir,
-      jenisKelamin: jenisKelamin,
-      alamat: alamat,
-      noTelp: noTelp,
-      gajiPokok: gajiPokok,
-      bonusGaji: bonusGaji,
-    ));
-  }
-
   List<Karyawan> listDataKaryawan = [
     Karyawan(
       nip: '7053240983',

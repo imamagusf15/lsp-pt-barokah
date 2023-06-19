@@ -1,6 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
-import 'package:lsp_pt_barokah/db/connection.dart';
+import 'package:lsp_pt_barokah/db/karyawan_service.dart';
+import 'package:lsp_pt_barokah/models/karyawan_model.dart';
 import 'package:lsp_pt_barokah/screens/add_karyawan_page.dart';
 import 'package:lsp_pt_barokah/screens/detail_karyawan_page.dart';
 import 'package:lsp_pt_barokah/screens/edit_karyawan_page.dart';
@@ -14,8 +16,18 @@ class KaryawanPage extends StatefulWidget {
 
 class _KaryawanPageState extends State<KaryawanPage> {
   // final ListKaryawan _listKaryawan = ListKaryawan();
-
   final KaryawanCollection karyawanCollection = KaryawanCollection();
+
+  List<String> id = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    final docId = karyawanCollection.getAllKaryawanId().listen((e) {
+      id = e;
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,10 +38,12 @@ class _KaryawanPageState extends State<KaryawanPage> {
         children: [
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.665,
-            child: FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
-              future: karyawanCollection.getAllKaryawan(),
+            child: StreamBuilder<List<Karyawan>>(
+              stream: karyawanCollection.getAllKaryawan(),
               builder: (context, snapshot) {
-                var allDocs = snapshot.data?.docs;
+                var allDocs = snapshot.data;
+                print(allDocs);
+                // print(id);
                 if (snapshot.hasData) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(
@@ -41,17 +55,16 @@ class _KaryawanPageState extends State<KaryawanPage> {
                       itemCount: allDocs!.length,
                       itemBuilder: (context, index) {
                         var docs = allDocs[index];
-                        print('${docs.id} => ${docs.data()}');
                         return Column(
                           children: [
                             ListTile(
-                              leading: CircleAvatar(child: Text(docs.id)),
-                              title: Text(docs.data()['nama']),
-                              subtitle: Text(docs.data()['jabatan']),
+                              leading: CircleAvatar(child: Text(id[index])),
+                              title: Text(docs.nama),
+                              subtitle: Text(docs.jabatan),
                               onTap: () => Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) =>
-                                      DetailKaryawanPage(karyawan: docs.data()),
+                                      DetailKaryawanPage(karyawan: docs),
                                 ),
                               ),
                               trailing: PopupMenuButton(
@@ -62,8 +75,8 @@ class _KaryawanPageState extends State<KaryawanPage> {
                                         MaterialPageRoute(
                                           builder: (context) =>
                                               EditKaryawanPage(
-                                            karyawan: docs.data(),
-                                            id: docs.id,
+                                            karyawan: docs,
+                                            id: id[index],
                                           ),
                                         ),
                                       );
@@ -79,7 +92,12 @@ class _KaryawanPageState extends State<KaryawanPage> {
                                                 "Apakah anda yakin ingin menghapus karyawan ini?"),
                                             actions: [
                                               TextButton(
-                                                onPressed: () {},
+                                                onPressed: () {
+                                                  karyawanCollection
+                                                      .deleteKaryawan(
+                                                          id[index]);
+                                                  Navigator.of(context).pop();
+                                                },
                                                 child: const Text(
                                                   "Hapus",
                                                   style: TextStyle(

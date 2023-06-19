@@ -1,13 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:lsp_pt_barokah/db/connection.dart';
+import 'package:lsp_pt_barokah/db/karyawan_service.dart';
+import 'package:lsp_pt_barokah/models/karyawan_model.dart';
 import 'package:lsp_pt_barokah/widgets/inputformfield.dart';
 
 class EditKaryawanPage extends StatefulWidget {
   const EditKaryawanPage({super.key, required this.karyawan, required this.id});
 
-  final Map<String, dynamic> karyawan;
+  final Karyawan karyawan;
   final String id;
 
   @override
@@ -23,22 +24,21 @@ class _EditKaryawanPageState extends State<EditKaryawanPage> {
 
   GlobalKey formKey = GlobalKey<FormState>();
 
-  late Map<String, dynamic> karyawan = widget.karyawan;
+  late Karyawan karyawan = widget.karyawan;
   late String id = widget.id;
 
-  late String? jenisKelamin = karyawan['jenis_kelamin'];
-  late String? jabatan = karyawan['jabatan'];
+  late String? jenisKelamin = karyawan.jenisKelamin;
+  late String? jabatan = karyawan.jabatan;
   int gajiPokok = 0;
 
   @override
   void initState() {
     super.initState();
-    nipController.text = karyawan['nip'];
-    namaController.text = karyawan['nama'];
-    dateController.text = DateFormat("dd-MM-yyyy")
-        .format((karyawan['tgl_lahir'] as Timestamp).toDate());
-    alamatController.text = karyawan['alamat'];
-    telpController.text = karyawan['no_telp'];
+    nipController.text = karyawan.nip;
+    namaController.text = karyawan.nama;
+    dateController.text = DateFormat("dd-MM-yyyy").format((karyawan.tglLahir));
+    alamatController.text = karyawan.alamat;
+    telpController.text = karyawan.noTelp;
   }
 
   @override
@@ -244,18 +244,21 @@ class _EditKaryawanPageState extends State<EditKaryawanPage> {
                         ),
                       );
 
-                      // karyawanCollection.updateKaryawan(
-                      //   id,
-                      //   nipController.text,
-                      //   namaController.text,
-                      //   Timestamp.fromDate(
-                      //     DateTime.parse(tglLahir),
-                      //   ),
-                      //   jabatan!,
-                      //   jenisKelamin!,
-                      //   alamatController.text,
-                      //   telpController.text,
-                      // );
+                      karyawanCollection.updateKaryawan(
+                        id,
+                        nipController.text,
+                        namaController.text,
+                        Timestamp.fromDate(
+                          DateTime.parse(tglLahir),
+                        ),
+                        jabatan!,
+                        jenisKelamin!,
+                        alamatController.text,
+                        telpController.text,
+                      );
+
+                      // ScaffoldMessengerState().showSnackBar(const SnackBar(
+                      //     content: Text('Data berhasil diupdate')));
                     },
                     child: const Text(
                       'Ubah',

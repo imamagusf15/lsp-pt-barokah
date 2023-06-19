@@ -53,31 +53,30 @@ class DetailLaporanGajiPage extends StatelessWidget {
               label: Text('Total Gaji'),
             ),
           ],
-          itemCount: listLaporan.listDataKaryawan!.length,
+          itemCount: listLaporan.listDataKaryawan.length,
           itemBuilder: (index) {
-            var dataKaryawan = listLaporan.listDataKaryawan!;
+            var dataKaryawan = listLaporan.listDataKaryawan;
             return DataRow(
               cells: [
-                DataCell(Text(dataKaryawan[index].nama!)),
-                DataCell(Text(dataKaryawan[index].nip!)),
-                DataCell(Text(dataKaryawan[index].jabatan!)),
+                DataCell(Text(dataKaryawan[index].nama)),
+                DataCell(Text(dataKaryawan[index].nip)),
+                DataCell(Text(dataKaryawan[index].jabatan)),
                 DataCell(Text(
-                  CurrencyFormat.convertToIdr(
-                      dataKaryawan[index].gajiPokok!, 2),
+                  CurrencyFormat.convertToIdr(dataKaryawan[index].gajiPokok, 2),
                 )),
                 DataCell(
-                    Text('${(dataKaryawan[index].bonusGaji! * 100).toInt()}%')),
+                    Text('${(dataKaryawan[index].bonusGaji * 100).toInt()}%')),
                 const DataCell(Text('5%')),
-                DataCell(Text(
-                  CurrencyFormat.convertToIdr(
-                    Laporan().hitungGaji(
-                      dataKaryawan[index].jabatan!,
-                      dataKaryawan[index].gajiPokok!,
-                      dataKaryawan[index].bonusGaji!,
-                    ),
-                    2,
-                  ),
-                )),
+                // DataCell(Text(
+                //   CurrencyFormat.convertToIdr(
+                //     Laporan().hitungGaji(
+                //       dataKaryawan[index].jabatan,
+                //       dataKaryawan[index].gajiPokok,
+                //       dataKaryawan[index].bonusGaji,
+                //     ),
+                //     2,
+                //   ),
+                // )),
               ],
             );
           },

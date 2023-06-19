@@ -1,7 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:lsp_pt_barokah/db/connection.dart';
 import 'package:lsp_pt_barokah/widgets/inputformfield.dart';
 
 class AddKaryawanPage extends StatefulWidget {
@@ -244,7 +242,7 @@ class _AddKaryawanPageState extends State<AddKaryawanPage> {
                           //   gajiPokok: gajiPokok,
                           //   bonusGaji: bonusGaji,
                           // );
-                          final karyawanCollection = KaryawanCollection();
+                          // final karyawanCollection = KaryawanCollection();
 
                           final String tglLahir = DateFormat("yyyy-MM-dd")
                               .parse(dateController.text)
@@ -253,18 +251,18 @@ class _AddKaryawanPageState extends State<AddKaryawanPage> {
                             Navigator.of(context).pop();
                           });
 
-                          karyawanCollection.addKaryawan(
-                            '007',
-                            nipController.text,
-                            namaController.text,
-                            Timestamp.fromDate(
-                              DateTime.parse(tglLahir),
-                            ),
-                            jabatan,
-                            jenisKelamin!,
-                            alamatController.text,
-                            telpController.text,
-                          );
+                          // karyawanCollection.addKaryawan(
+                          //   '007',
+                          //   nipController.text,
+                          //   namaController.text,
+                          //   Timestamp.fromDate(
+                          //     DateTime.parse(tglLahir),
+                          //   ),
+                          //   jabatan,
+                          //   jenisKelamin!,
+                          //   alamatController.text,
+                          //   telpController.text,
+                          // );
                         },
                         child: const Text(
                           'Tambah',
