@@ -32,17 +32,17 @@ class Karyawan {
     );
   }
 
-  Map<String, dynamic> karyawanToJson(Karyawan instance) {
+  Map<String, dynamic> karyawanToJson() {
     return {
-      'nip': instance.nip,
-      'nama': instance.nama,
-      'tgl_lahir': instance.tglLahir,
-      'jenis_kelamin': instance.jenisKelamin,
-      'jabatan': instance.jabatan,
-      'alamat': instance.alamat,
-      'no_telp': instance.noTelp,
-      'gaji_pokok': instance.gajiPokok,
-      'bonus_gaji': instance.bonusGaji,
+      'nip': nip,
+      'nama': nama,
+      'tgl_lahir': tglLahir,
+      'jenis_kelamin': jenisKelamin,
+      'jabatan': jabatan,
+      'alamat': alamat,
+      'no_telp': noTelp,
+      'gaji_pokok': gajiPokok,
+      'bonus_gaji': bonusGaji,
     };
   }
 }

@@ -1,7 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:lsp_pt_barokah/db/karyawan_service.dart';
 import 'package:lsp_pt_barokah/db/laporan_service.dart';
+import 'package:lsp_pt_barokah/models/karyawan_model.dart';
 import 'package:lsp_pt_barokah/models/laporan_model.dart';
+import 'package:lsp_pt_barokah/screens/detail_laporan_gaji.dart';
 
 class LaporanPage extends StatefulWidget {
   const LaporanPage({super.key});
@@ -15,6 +19,25 @@ class _LaporanPageState extends State<LaporanPage> {
 
   LaporanCollection laporanCollection = LaporanCollection();
 
+  final List<Karyawan> listKaryawan = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    KaryawanCollection().getAllKaryawan().listen((event) {
+      for (var element in event) {
+        listKaryawan.add(element);
+      }
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -27,6 +50,7 @@ class _LaporanPageState extends State<LaporanPage> {
             child: StreamBuilder<List<Laporan>>(
               stream: laporanCollection.getAllLaporan(),
               builder: (context, snapshot) {
+                print(snapshot);
                 if (snapshot.hasData) {
                   var allLaporan = snapshot.data;
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -34,71 +58,72 @@ class _LaporanPageState extends State<LaporanPage> {
                       child: CircularProgressIndicator(),
                     );
                   } else {
-                    // return ListView.builder(
-                    //   shrinkWrap: true,
-                    //   itemCount: allLaporan!.length,
-                    //   itemBuilder: (context, index) {
-                    //     var laporan = allLaporan[index];
-                    //     return Column(
-                    //       children: [
-                    //         ListTile(
-                    //           shape: RoundedRectangleBorder(
-                    //               borderRadius: BorderRadius.circular(12)),
-                    //           leading: CircleAvatar(child: Text(laporan.id!)),
-                    //           title: Text(
-                    //               "Laporan Gaji ${DateFormat("dd-MM-yyyy").format((laporan['tgl_laporan'] as Timestamp).toDate())}"),
-                    //           subtitle: Text(
-                    //               "${DateFormat('dd/MM/yyyy').format((laporan['tgl_laporan'] as Timestamp).toDate().subtract(
-                    //                     const Duration(
-                    //                       days: 30,
-                    //                     ),
-                    //                   ))} - ${DateFormat("dd-MM-yyyy").format((laporan['tgl_laporan'] as Timestamp).toDate())}"),
-                    //           onTap: () => Navigator.of(context).push(
-                    //             MaterialPageRoute(
-                    //               builder: (context) => DetailLaporanGajiPage(
-                    //                   dataLaporan: laporan.data()),
-                    //             ),
-                    //           ),
-                    //           trailing: IconButton(
-                    //             onPressed: () {
-                    //               showDialog(
-                    //                 context: context,
-                    //                 barrierDismissible: false,
-                    //                 builder: (context) {
-                    //                   return AlertDialog(
-                    //                     title: const Text("Hapus Laporan"),
-                    //                     content: const Text(
-                    //                         "Apakah anda yakin ingin menghapus laporan ini?"),
-                    //                     actions: [
-                    //                       TextButton(
-                    //                         onPressed: () {},
-                    //                         child: const Text(
-                    //                           "Hapus",
-                    //                           style:
-                    //                               TextStyle(color: Colors.red),
-                    //                         ),
-                    //                       ),
-                    //                       TextButton(
-                    //                         onPressed: () =>
-                    //                             Navigator.of(context).pop(),
-                    //                         child: const Text("Batal"),
-                    //                       ),
-                    //                     ],
-                    //                   );
-                    //                 },
-                    //               );
-                    //             },
-                    //             icon: const Icon(Icons.delete),
-                    //           ),
-                    //         ),
-                    //         const Divider()
-                    //       ],
-                    //     );
-                    //   },
-                    // );
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: allLaporan!.length,
+                      itemBuilder: (context, index) {
+                        var laporan = allLaporan[index];
+                        return Column(
+                          children: [
+                            ListTile(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12)),
+                              leading: CircleAvatar(
+                                  child: Text((index + 1).toString())),
+                              title: Text(
+                                  "Laporan Gaji ${DateFormat("dd-MM-yyyy").format(laporan.tglLaporan!)}"),
+                              subtitle: Text(
+                                  "${DateFormat('dd/MM/yyyy').format(laporan.tglLaporan!.subtract(
+                                const Duration(
+                                  days: 30,
+                                ),
+                              ))} - ${DateFormat("dd-MM-yyyy").format(laporan.tglLaporan!)}"),
+                              onTap: () => Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => DetailLaporanGajiPage(
+                                      dataLaporan: laporan),
+                                ),
+                              ),
+                              trailing: IconButton(
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    barrierDismissible: false,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: const Text("Hapus Laporan"),
+                                        content: const Text(
+                                            "Apakah anda yakin ingin menghapus laporan ini?"),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {},
+                                            child: const Text(
+                                              "Hapus",
+                                              style:
+                                                  TextStyle(color: Colors.red),
+                                            ),
+                                          ),
+                                          TextButton(
+                                            onPressed: () =>
+                                                Navigator.of(context).pop(),
+                                            child: const Text("Batal"),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                },
+                                icon: const Icon(Icons.delete),
+                              ),
+                            ),
+                            const Divider()
+                          ],
+                        );
+                      },
+                    );
                   }
                 } else if (snapshot.hasError) {
-                  const Text('Tidak ada karyawan.');
+                  const Text('Terdapat kesalahan.');
                 }
                 return const Center(child: CircularProgressIndicator());
               },
@@ -131,8 +156,10 @@ class _LaporanPageState extends State<LaporanPage> {
                         ),
                         TextButton(
                           onPressed: () {
+                            print(listKaryawan);
+                            laporanCollection.addLaporan(
+                                DateTime.now(), listKaryawan);
                             Navigator.of(context).pop();
-                            setState(() {});
                           },
                           child: const Text("Buat"),
                         ),

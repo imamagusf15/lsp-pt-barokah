@@ -238,11 +238,11 @@ class _EditKaryawanPageState extends State<EditKaryawanPage> {
                           .parse(dateController.text)
                           .toString();
 
-                      print(
-                        Timestamp.fromDate(
-                          DateTime.parse(tglLahir),
-                        ),
-                      );
+                      // print(
+                      //   Timestamp.fromDate(
+                      //     DateTime.parse(tglLahir),
+                      //   ),
+                      // );
 
                       karyawanCollection.updateKaryawan(
                         id,

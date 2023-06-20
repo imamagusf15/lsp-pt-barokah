@@ -1,42 +1,34 @@
+import 'dart:convert';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lsp_pt_barokah/models/karyawan_model.dart';
 
 class Laporan {
-  String? id;
-  List<Karyawan> listDataKaryawan;
+  List<dynamic> listDataKaryawan;
   DateTime? tglLaporan;
   int totalGaji;
 
   Laporan({
-    this.id,
     required this.listDataKaryawan,
     required this.tglLaporan,
-    required this.totalGaji,
+    this.totalGaji = 0,
   });
 
   factory Laporan.fromJson(Map<String, dynamic> json) {
     return Laporan(
-      id: json['nip'],
-      listDataKaryawan: json['nama'],
-      tglLaporan: json['tgl_lahir'],
-      totalGaji: json['jenis_kelamin'],
+      listDataKaryawan: json['list_karyawan'] as List<dynamic>,
+      // (json['list_karyawan'] as List<Karyawan>)
+      //     .map((e) => Karyawan.fromJson(e as Map<String, dynamic>))
+      //     .toList(),
+      tglLaporan: (json['tgl_laporan'] as Timestamp).toDate(),
     );
-  }
-
-  List<Karyawan> convertVaccinations(List<dynamic> karyawanMap) {
-    final listKaryawan = <Karyawan>[];
-
-    for (final karyawan in karyawanMap) {
-      listKaryawan.add(Karyawan.fromJson(karyawan as Map<String, dynamic>));
-    }
-    return listKaryawan;
   }
 
   Map<String, dynamic> laporanToJson(Laporan instance) {
     return {
-      'id': instance.id,
-      'list_karyawan': instance.listDataKaryawan,
+      'list_karyawan':
+          jsonEncode(instance.listDataKaryawan.map((e) => e.karyawanToJson())),
       'tgl_laporan': instance.tglLaporan,
-      'total_gaji': instance.totalGaji,
     };
   }
 
@@ -53,7 +45,6 @@ class ListLaporan {
   static ListKaryawan listKaryawan = ListKaryawan();
   List<Laporan> listLaporan = [
     Laporan(
-      id: '001',
       listDataKaryawan: listKaryawan.listDataKaryawan,
       tglLaporan: DateTime.now(),
       totalGaji: 0,

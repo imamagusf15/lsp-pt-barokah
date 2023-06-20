@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:lsp_pt_barokah/db/karyawan_service.dart';
 import 'package:lsp_pt_barokah/widgets/inputformfield.dart';
 
 class AddKaryawanPage extends StatefulWidget {
@@ -21,7 +23,7 @@ class _AddKaryawanPageState extends State<AddKaryawanPage> {
   int gajiPokok = 0;
   double bonusGaji = 0;
 
-  // final ListKaryawan _listKaryawan = ListKaryawan();
+  KaryawanCollection karyawanCollection = KaryawanCollection();
 
   @override
   Widget build(BuildContext context) {
@@ -231,19 +233,6 @@ class _AddKaryawanPageState extends State<AddKaryawanPage> {
                             borderRadius: BorderRadius.circular(8)),
                         color: Colors.white,
                         onPressed: () {
-                          // _listKaryawan.addKaryawan(
-                          //   nip: nipController.text,
-                          //   nama: namaController.text,
-                          //   jabatan: jabatan,
-                          //   tglLahir: DateTime.parse(dateController.text),
-                          //   jenisKelamin: jenisKelamin!,
-                          //   alamat: alamatController.text,
-                          //   noTelp: telpController.text,
-                          //   gajiPokok: gajiPokok,
-                          //   bonusGaji: bonusGaji,
-                          // );
-                          // final karyawanCollection = KaryawanCollection();
-
                           final String tglLahir = DateFormat("yyyy-MM-dd")
                               .parse(dateController.text)
                               .toString();
@@ -251,18 +240,17 @@ class _AddKaryawanPageState extends State<AddKaryawanPage> {
                             Navigator.of(context).pop();
                           });
 
-                          // karyawanCollection.addKaryawan(
-                          //   '007',
-                          //   nipController.text,
-                          //   namaController.text,
-                          //   Timestamp.fromDate(
-                          //     DateTime.parse(tglLahir),
-                          //   ),
-                          //   jabatan,
-                          //   jenisKelamin!,
-                          //   alamatController.text,
-                          //   telpController.text,
-                          // );
+                          karyawanCollection.addKaryawan(
+                            nipController.text,
+                            namaController.text,
+                            Timestamp.fromDate(
+                              DateTime.parse(tglLahir),
+                            ),
+                            jabatan,
+                            jenisKelamin!,
+                            alamatController.text,
+                            telpController.text,
+                          );
                         },
                         child: const Text(
                           'Tambah',

@@ -9,7 +9,7 @@ class KaryawanCollection {
     return colRef.snapshots().map(
       (doc) {
         final data = Karyawan.fromJson(doc.data()!);
-        print(data);
+        // print(data);
         return data;
       },
     );
@@ -30,7 +30,7 @@ class KaryawanCollection {
   Stream<List<String>> getAllKaryawanId() {
     return db.collection("karyawan").snapshots().map(
       (querySnapshot) {
-        print("Successfully completed");
+        // print("Successfully completed");
         final documents =
             querySnapshot.docs.map((doc) => doc.reference.id).toList();
         return documents;
@@ -39,7 +39,6 @@ class KaryawanCollection {
   }
 
   void addKaryawan(
-    String docId,
     String nip,
     String nama,
     Timestamp tglLahir,

@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:lsp_pt_barokah/db/karyawan_service.dart';
 import 'package:lsp_pt_barokah/models/karyawan_model.dart';
@@ -42,7 +40,7 @@ class _KaryawanPageState extends State<KaryawanPage> {
               stream: karyawanCollection.getAllKaryawan(),
               builder: (context, snapshot) {
                 var allDocs = snapshot.data;
-                print(allDocs);
+                print(snapshot);
                 // print(id);
                 if (snapshot.hasData) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -58,7 +56,8 @@ class _KaryawanPageState extends State<KaryawanPage> {
                         return Column(
                           children: [
                             ListTile(
-                              leading: CircleAvatar(child: Text(id[index])),
+                              leading: CircleAvatar(
+                                  child: Text((index + 1).toString())),
                               title: Text(docs.nama),
                               subtitle: Text(docs.jabatan),
                               onTap: () => Navigator.of(context).push(
