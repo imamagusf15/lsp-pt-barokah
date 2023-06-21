@@ -234,22 +234,15 @@ class _EditKaryawanPageState extends State<EditKaryawanPage> {
                     onPressed: () {
                       final karyawanCollection = KaryawanCollection();
 
-                      final String tglLahir = DateFormat("yyyy-MM-dd")
-                          .parse(dateController.text)
-                          .toString();
-
-                      // print(
-                      //   Timestamp.fromDate(
-                      //     DateTime.parse(tglLahir),
-                      //   ),
-                      // );
+                      final tglLahir =
+                          DateFormat("dd-MM-yyyy").parse(dateController.text);
 
                       karyawanCollection.updateKaryawan(
                         id,
                         nipController.text,
                         namaController.text,
                         Timestamp.fromDate(
-                          DateTime.parse(tglLahir),
+                          tglLahir,
                         ),
                         jabatan!,
                         jenisKelamin!,
@@ -257,8 +250,8 @@ class _EditKaryawanPageState extends State<EditKaryawanPage> {
                         telpController.text,
                       );
 
-                      // ScaffoldMessengerState().showSnackBar(const SnackBar(
-                      //     content: Text('Data berhasil diupdate')));
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text('Data berhasil diupdate')));
                     },
                     child: const Text(
                       'Ubah',

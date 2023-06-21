@@ -28,6 +28,17 @@ class LaporanCollection {
     );
   }
 
+  Stream<List<String>> getAllLaporanId() {
+    return db.collection("laporan").snapshots().map(
+      (querySnapshot) {
+        // print("Successfully completed");
+        final laporanId =
+            querySnapshot.docs.map((doc) => doc.reference.id).toList();
+        return laporanId;
+      },
+    );
+  }
+
   void addLaporan(
     DateTime tglLaporan,
     List<Karyawan> listKaryawan,
@@ -65,5 +76,9 @@ class LaporanCollection {
         .doc()
         .set(data)
         .onError((e, _) => print("Error writing document: $e"));
+  }
+
+  void deleteLaporan(id) {
+    db.collection("laporan").doc(id).delete();
   }
 }

@@ -20,9 +20,10 @@ class _KaryawanPageState extends State<KaryawanPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
-    final docId = karyawanCollection.getAllKaryawanId().listen((e) {
-      id = e;
+    karyawanCollection.getAllKaryawanId().listen((e) {
+      for (var element in e) {
+        id.add(element);
+      }
     });
     super.initState();
   }
@@ -40,7 +41,7 @@ class _KaryawanPageState extends State<KaryawanPage> {
               stream: karyawanCollection.getAllKaryawan(),
               builder: (context, snapshot) {
                 var allDocs = snapshot.data;
-                print(snapshot);
+                // print(snapshot);
                 // print(id);
                 if (snapshot.hasData) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -96,6 +97,10 @@ class _KaryawanPageState extends State<KaryawanPage> {
                                                       .deleteKaryawan(
                                                           id[index]);
                                                   Navigator.of(context).pop();
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(const SnackBar(
+                                                          content: Text(
+                                                              'Karyawan berhasil dihapus')));
                                                 },
                                                 child: const Text(
                                                   "Hapus",

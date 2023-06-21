@@ -233,24 +233,23 @@ class _AddKaryawanPageState extends State<AddKaryawanPage> {
                             borderRadius: BorderRadius.circular(8)),
                         color: Colors.white,
                         onPressed: () {
-                          final String tglLahir = DateFormat("yyyy-MM-dd")
-                              .parse(dateController.text)
-                              .toString();
-                          setState(() {
-                            Navigator.of(context).pop();
-                          });
+                          final tglLahir = DateFormat("dd-MM-yyyy")
+                              .parse(dateController.text);
 
                           karyawanCollection.addKaryawan(
                             nipController.text,
                             namaController.text,
-                            Timestamp.fromDate(
-                              DateTime.parse(tglLahir),
-                            ),
+                            Timestamp.fromDate(tglLahir),
                             jabatan,
                             jenisKelamin!,
                             alamatController.text,
                             telpController.text,
                           );
+                          Navigator.of(context).pop();
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text('Data berhasil ditambah')));
                         },
                         child: const Text(
                           'Tambah',

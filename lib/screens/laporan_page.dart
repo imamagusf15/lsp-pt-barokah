@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:lsp_pt_barokah/db/karyawan_service.dart';
@@ -18,24 +17,24 @@ class _LaporanPageState extends State<LaporanPage> {
   // ListLaporan dataLaporan = ListLaporan();
 
   LaporanCollection laporanCollection = LaporanCollection();
+  KaryawanCollection karyawanCollection = KaryawanCollection();
 
   final List<Karyawan> listKaryawan = [];
+  List<String> laporanId = [];
 
   @override
   void initState() {
-    // TODO: implement initState
-    KaryawanCollection().getAllKaryawan().listen((event) {
+    karyawanCollection.getAllKaryawan().listen((event) {
       for (var element in event) {
         listKaryawan.add(element);
       }
     });
+    laporanCollection.getAllLaporanId().listen((event) {
+      for (var element in event) {
+        laporanId.add(element);
+      }
+    });
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
   }
 
   @override
@@ -50,7 +49,7 @@ class _LaporanPageState extends State<LaporanPage> {
             child: StreamBuilder<List<Laporan>>(
               stream: laporanCollection.getAllLaporan(),
               builder: (context, snapshot) {
-                print(snapshot);
+                // print(laporanId);
                 if (snapshot.hasData) {
                   var allLaporan = snapshot.data;
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -73,7 +72,7 @@ class _LaporanPageState extends State<LaporanPage> {
                               title: Text(
                                   "Laporan Gaji ${DateFormat("dd-MM-yyyy").format(laporan.tglLaporan!)}"),
                               subtitle: Text(
-                                  "${DateFormat('dd/MM/yyyy').format(laporan.tglLaporan!.subtract(
+                                  "${DateFormat('dd-MM-yyyy').format(laporan.tglLaporan!.subtract(
                                 const Duration(
                                   days: 30,
                                 ),
@@ -96,7 +95,11 @@ class _LaporanPageState extends State<LaporanPage> {
                                             "Apakah anda yakin ingin menghapus laporan ini?"),
                                         actions: [
                                           TextButton(
-                                            onPressed: () {},
+                                            onPressed: () {
+                                              laporanCollection.deleteLaporan(
+                                                  laporanId[index]);
+                                              Navigator.of(context).pop();
+                                            },
                                             child: const Text(
                                               "Hapus",
                                               style:
@@ -160,6 +163,9 @@ class _LaporanPageState extends State<LaporanPage> {
                             laporanCollection.addLaporan(
                                 DateTime.now(), listKaryawan);
                             Navigator.of(context).pop();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text('Laporan berhasil dibuat')));
                           },
                           child: const Text("Buat"),
                         ),

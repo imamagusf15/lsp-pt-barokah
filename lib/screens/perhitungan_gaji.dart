@@ -117,7 +117,7 @@ class _PerhitunganGajiState extends State<PerhitunganGaji> {
                 Text(
                     "Gaji Pokok Anda: ${CurrencyFormat.convertToIdr(gajiPokok, 2)}"),
                 Text("Bonus Gaji Anda: ${(bonusGaji * 100).toInt()}%"),
-                Text("PPN Gaji : 5%"),
+                const Text("PPN Gaji : 5%"),
                 Text(
                     "Total Gaji Anda: ${CurrencyFormat.convertToIdr(totalGaji, 2)}"),
               ],
