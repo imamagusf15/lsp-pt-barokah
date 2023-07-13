@@ -1,7 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:lsp_pt_barokah/src/db/firestore_service.dart';
+import 'package:provider/provider.dart';
 import 'firebase_options.dart';
-import 'package:lsp_pt_barokah/screens/home_page.dart';
+import 'package:lsp_pt_barokah/src/screens/home_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,11 +18,22 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-          primarySwatch: Colors.blue, scaffoldBackgroundColor: Colors.white),
-      home: const HomePage(),
+    final firestoreService = FirestoreService();
+    return MultiProvider(
+      providers: [
+        StreamProvider.value(
+            value: firestoreService.getAllLaporan(), initialData: null),
+        StreamProvider.value(
+            value: firestoreService.getAllKaryawan(), initialData: null)
+      ],
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          scaffoldBackgroundColor: Colors.white,
+        ),
+        home: const HomePage(),
+      ),
     );
   }
 }

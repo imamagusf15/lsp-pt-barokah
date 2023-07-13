@@ -1,8 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:lsp_pt_barokah/db/karyawan_service.dart';
-import 'package:lsp_pt_barokah/widgets/inputformfield.dart';
+import 'package:lsp_pt_barokah/src/db/firestore_service.dart';
+import 'package:lsp_pt_barokah/src/models/karyawan_model.dart';
+import 'package:lsp_pt_barokah/src/utils/validator.dart';
+import 'package:lsp_pt_barokah/src/widgets/inputformfield.dart';
+import 'package:lsp_pt_barokah/src/widgets/show_snackbar.dart';
 
 class AddKaryawanPage extends StatefulWidget {
   const AddKaryawanPage({super.key});
@@ -12,18 +14,32 @@ class AddKaryawanPage extends StatefulWidget {
 }
 
 class _AddKaryawanPageState extends State<AddKaryawanPage> {
-  TextEditingController nipController = TextEditingController();
-  TextEditingController namaController = TextEditingController();
-  TextEditingController dateController = TextEditingController();
-  TextEditingController alamatController = TextEditingController();
-  TextEditingController telpController = TextEditingController();
+  final nipController = TextEditingController();
+  final namaController = TextEditingController();
+  final dateController = TextEditingController();
+  final alamatController = TextEditingController();
+  final telpController = TextEditingController();
 
-  String? jenisKelamin = 'L';
+  final _formKey = GlobalKey<FormState>();
+  final validator = Validator();
+
+  final snackBar = ShowSnackBar();
+
+  String jenisKelamin = 'L';
   String jabatan = 'Staff';
-  int gajiPokok = 0;
-  double bonusGaji = 0;
 
-  KaryawanCollection karyawanCollection = KaryawanCollection();
+  final karyawanCollection = FirestoreService();
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    nipController.dispose();
+    namaController.dispose();
+    dateController.dispose();
+    alamatController.dispose();
+    telpController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +49,7 @@ class _AddKaryawanPageState extends State<AddKaryawanPage> {
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
           child: Form(
+            key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -44,6 +61,7 @@ class _AddKaryawanPageState extends State<AddKaryawanPage> {
                       fontSize: 16),
                 ),
                 InputFormField(
+                  validator: (field) => validator.validateField(field: field!),
                   controller: nipController,
                   keyboardType: TextInputType.number,
                   maxLength: 15,
@@ -57,6 +75,7 @@ class _AddKaryawanPageState extends State<AddKaryawanPage> {
                       fontSize: 16),
                 ),
                 InputFormField(
+                  validator: (field) => validator.validateField(field: field!),
                   controller: namaController,
                   keyboardType: TextInputType.name,
                   maxLength: 25,
@@ -70,16 +89,18 @@ class _AddKaryawanPageState extends State<AddKaryawanPage> {
                       fontSize: 16),
                 ),
                 InputFormField(
+                  validator: (field) => validator.validateField(field: field!),
                   controller: dateController,
                   keyboardType: TextInputType.datetime,
                   hintText: 'Masukkan tanggal lahir Anda..',
+                  readOnly: true,
                   suffixIcon: IconButton(
                     onPressed: () {
                       showDatePicker(
                           context: context,
                           initialDate: DateTime.now(),
                           firstDate: DateTime(1950, 1),
-                          lastDate: DateTime.now(),
+                          lastDate: DateTime(2035, 12),
                           builder: (context, picker) {
                             return Theme(
                               data: ThemeData.light().copyWith(
@@ -126,7 +147,7 @@ class _AddKaryawanPageState extends State<AddKaryawanPage> {
                       value: jenisKelamin,
                       onChanged: (index) {
                         setState(() {
-                          jenisKelamin = index;
+                          jenisKelamin = index!;
                         });
                       },
                     ),
@@ -160,21 +181,6 @@ class _AddKaryawanPageState extends State<AddKaryawanPage> {
                       onChanged: (index) {
                         setState(() {
                           jabatan = index!;
-                          switch (jabatan) {
-                            case 'Manager':
-                              gajiPokok = 7000000;
-                              bonusGaji = 0.5;
-                              break;
-                            case 'Supervisor':
-                              gajiPokok = 5000000;
-                              bonusGaji = 0.4;
-                              break;
-                            case 'Staff':
-                              gajiPokok = 4000000;
-                              bonusGaji = 0.3;
-                              break;
-                            default:
-                          }
                         });
                       },
                     ),
@@ -189,6 +195,7 @@ class _AddKaryawanPageState extends State<AddKaryawanPage> {
                       fontSize: 16),
                 ),
                 InputFormField(
+                  validator: (field) => validator.validateField(field: field!),
                   controller: alamatController,
                   keyboardType: TextInputType.streetAddress,
                   hintText: 'Masukkan alamat rumah Anda..',
@@ -202,6 +209,7 @@ class _AddKaryawanPageState extends State<AddKaryawanPage> {
                       fontSize: 16),
                 ),
                 InputFormField(
+                  validator: (field) => validator.validateField(field: field!),
                   controller: telpController,
                   keyboardType: TextInputType.phone,
                   maxLength: 15,
@@ -233,23 +241,46 @@ class _AddKaryawanPageState extends State<AddKaryawanPage> {
                             borderRadius: BorderRadius.circular(8)),
                         color: Colors.white,
                         onPressed: () {
-                          final tglLahir = DateFormat("dd-MM-yyyy")
-                              .parse(dateController.text);
+                          int gajiPokok = 0;
+                          double bonusGaji = 0;
+                          switch (jabatan) {
+                            case 'Staff':
+                              gajiPokok = 4000000;
+                              bonusGaji = 0.3;
+                              break;
+                            case 'Supervisor':
+                              gajiPokok = 5000000;
+                              bonusGaji = 0.4;
+                              break;
+                            case 'Manager':
+                              gajiPokok = 7000000;
+                              bonusGaji = 0.5;
+                              break;
+                            default:
+                          }
+                          if (_formKey.currentState!.validate()) {
+                            final tglLahir = DateFormat("dd-MM-yyyy")
+                                .parse(dateController.text);
+                            final newKaryawan = Karyawan(
+                              nip: nipController.text,
+                              nama: namaController.text,
+                              tglLahir: tglLahir,
+                              jenisKelamin: jenisKelamin,
+                              jabatan: jabatan,
+                              alamat: alamatController.text,
+                              noTelp: telpController.text,
+                              gajiPokok: gajiPokok,
+                              bonusGaji: bonusGaji,
+                            );
 
-                          karyawanCollection.addKaryawan(
-                            nipController.text,
-                            namaController.text,
-                            Timestamp.fromDate(tglLahir),
-                            jabatan,
-                            jenisKelamin!,
-                            alamatController.text,
-                            telpController.text,
-                          );
-                          Navigator.of(context).pop();
-
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content: Text('Data berhasil ditambah')));
+                            karyawanCollection.addKaryawan(newKaryawan);
+                            snackBar.showMsg(context, 'Data berhasil ditambah');
+                          }
+                          nipController.clear();
+                          namaController.clear();
+                          dateController.clear();
+                          alamatController.clear();
+                          telpController.clear();
                         },
                         child: const Text(
                           'Tambah',

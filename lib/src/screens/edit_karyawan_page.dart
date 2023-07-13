@@ -1,9 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:lsp_pt_barokah/db/karyawan_service.dart';
-import 'package:lsp_pt_barokah/models/karyawan_model.dart';
-import 'package:lsp_pt_barokah/widgets/inputformfield.dart';
+import 'package:lsp_pt_barokah/src/db/firestore_service.dart';
+import 'package:lsp_pt_barokah/src/models/karyawan_model.dart';
+import 'package:lsp_pt_barokah/src/utils/validator.dart';
+import 'package:lsp_pt_barokah/src/widgets/inputformfield.dart';
+import 'package:lsp_pt_barokah/src/widgets/show_snackbar.dart';
 
 class EditKaryawanPage extends StatefulWidget {
   const EditKaryawanPage({super.key, required this.karyawan, required this.id});
@@ -22,23 +23,36 @@ class _EditKaryawanPageState extends State<EditKaryawanPage> {
   TextEditingController alamatController = TextEditingController();
   TextEditingController telpController = TextEditingController();
 
-  GlobalKey formKey = GlobalKey<FormState>();
+  final formKey = GlobalKey<FormState>();
+  final validator = Validator();
+  final snackBar = ShowSnackBar();
 
-  late Karyawan karyawan = widget.karyawan;
-  late String id = widget.id;
-
-  late String? jenisKelamin = karyawan.jenisKelamin;
-  late String? jabatan = karyawan.jabatan;
-  int gajiPokok = 0;
+  String? jenisKelamin;
+  String? jabatan;
 
   @override
   void initState() {
     super.initState();
+    final karyawan = widget.karyawan;
+
+    jenisKelamin = karyawan.jenisKelamin;
+    jabatan = karyawan.jabatan;
+
     nipController.text = karyawan.nip;
     namaController.text = karyawan.nama;
     dateController.text = DateFormat("dd-MM-yyyy").format((karyawan.tglLahir));
     alamatController.text = karyawan.alamat;
     telpController.text = karyawan.noTelp;
+  }
+
+  @override
+  void dispose() {
+    nipController.dispose();
+    namaController.dispose();
+    dateController.dispose();
+    alamatController.dispose();
+    telpController.dispose();
+    super.dispose();
   }
 
   @override
@@ -64,6 +78,7 @@ class _EditKaryawanPageState extends State<EditKaryawanPage> {
                       fontSize: 16),
                 ),
                 InputFormField(
+                  validator: (field) => validator.validateField(field: field!),
                   controller: nipController,
                   keyboardType: TextInputType.number,
                   maxLength: 15,
@@ -77,6 +92,7 @@ class _EditKaryawanPageState extends State<EditKaryawanPage> {
                       fontSize: 16),
                 ),
                 InputFormField(
+                  validator: (field) => validator.validateField(field: field!),
                   controller: namaController,
                   keyboardType: TextInputType.name,
                   maxLength: 25,
@@ -90,6 +106,7 @@ class _EditKaryawanPageState extends State<EditKaryawanPage> {
                       fontSize: 16),
                 ),
                 InputFormField(
+                  validator: (field) => validator.validateField(field: field!),
                   controller: dateController,
                   keyboardType: TextInputType.datetime,
                   hintText: 'Masukkan tanggal lahir Anda..',
@@ -180,18 +197,6 @@ class _EditKaryawanPageState extends State<EditKaryawanPage> {
                       onChanged: (index) {
                         setState(() {
                           jabatan = index;
-                          switch (jabatan) {
-                            case 'Manager':
-                              gajiPokok = 7000000;
-                              break;
-                            case 'Supervisor':
-                              gajiPokok = 5000000;
-                              break;
-                            case 'Staff':
-                              gajiPokok = 4000000;
-                              break;
-                            default:
-                          }
                         });
                       },
                     ),
@@ -206,6 +211,7 @@ class _EditKaryawanPageState extends State<EditKaryawanPage> {
                       fontSize: 16),
                 ),
                 InputFormField(
+                  validator: (field) => validator.validateField(field: field!),
                   controller: alamatController..text,
                   keyboardType: TextInputType.streetAddress,
                   hintText: 'Masukkan alamat rumah Anda..',
@@ -219,6 +225,7 @@ class _EditKaryawanPageState extends State<EditKaryawanPage> {
                       fontSize: 16),
                 ),
                 InputFormField(
+                  validator: (field) => validator.validateField(field: field!),
                   controller: telpController,
                   keyboardType: TextInputType.phone,
                   maxLength: 15,
@@ -232,26 +239,46 @@ class _EditKaryawanPageState extends State<EditKaryawanPage> {
                         borderRadius: BorderRadius.circular(8)),
                     color: Colors.white,
                     onPressed: () {
-                      final karyawanCollection = KaryawanCollection();
-
+                      final db = FirestoreService();
+                      int gajiPokok = 0;
+                      double bonusGaji = 0;
+                      switch (jabatan) {
+                        case 'Staff':
+                          gajiPokok = 4000000;
+                          bonusGaji = 0.3;
+                          break;
+                        case 'Supervisor':
+                          gajiPokok = 5000000;
+                          bonusGaji = 0.4;
+                          break;
+                        case 'Manager':
+                          gajiPokok = 7000000;
+                          bonusGaji = 0.5;
+                          break;
+                        default:
+                      }
                       final tglLahir =
                           DateFormat("dd-MM-yyyy").parse(dateController.text);
+                      if (formKey.currentState!.validate()) {
+                        final newKaryawan = Karyawan(
+                          nip: nipController.text,
+                          nama: namaController.text,
+                          tglLahir: tglLahir,
+                          jenisKelamin: jenisKelamin!,
+                          jabatan: jabatan!,
+                          alamat: alamatController.text,
+                          noTelp: telpController.text,
+                          gajiPokok: gajiPokok,
+                          bonusGaji: bonusGaji,
+                        );
 
-                      karyawanCollection.updateKaryawan(
-                        id,
-                        nipController.text,
-                        namaController.text,
-                        Timestamp.fromDate(
-                          tglLahir,
-                        ),
-                        jabatan!,
-                        jenisKelamin!,
-                        alamatController.text,
-                        telpController.text,
-                      );
+                        db.updateKaryawan(newKaryawan);
 
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                          content: Text('Data berhasil diupdate')));
+                        snackBar.showMsg(context, 'Data berhasil diubah');
+                      } else {
+                        snackBar.showErrMsg(
+                            context, 'Data tidak berhasil diubah');
+                      }
                     },
                     child: const Text(
                       'Ubah',
