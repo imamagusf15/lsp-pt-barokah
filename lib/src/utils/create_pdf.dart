@@ -11,6 +11,7 @@ class PdfDoc {
 
   Future<File> createPdf(List<Map<String, dynamic>> data, DateTime tgl,
       String? sortedField, bool asc) async {
+    int totalGajiKaryawan = 0;
     if (sortedField != null) {
       data.sort((a, b) {
         if (asc) {
@@ -19,6 +20,11 @@ class PdfDoc {
           return b[sortedField].compareTo(a[sortedField]);
         }
       });
+    }
+
+    for (var map in data) {
+      final gaji = map['total_gaji'] as int;
+      totalGajiKaryawan = totalGajiKaryawan + gaji;
     }
 
     pw.Padding headingColumn(String textContent) {
@@ -37,15 +43,17 @@ class PdfDoc {
       pw.MultiPage(
         pageFormat: PdfPageFormat.a4.landscape,
         build: (context) {
+          toIdr(number) {
+            return CurrencyFormat.convertToIdr(number, 0);
+          }
+
           return [
             pw.Center(
               child: pw.Column(
                 children: [
                   pw.Header(
                     text:
-                        "Laporan Bulan ke-${tgl.month}\nTanggal ${DateFormat('dd-MM-yyyy').format(
-                      tgl.subtract(const Duration(days: 30)),
-                    )} - ${DateFormat('dd-MM-yyyy').format(tgl)}",
+                        "Laporan Bulan ke-${tgl.month}\nTanggal ${DateFormat('dd-MM-yyyy').format(tgl)} - ${DateFormat('dd-MM-yyyy').format(DateTime(tgl.year, tgl.month + 1, tgl.day))}",
                   ),
                   pw.Table(
                     columnWidths: {
@@ -113,28 +121,86 @@ class PdfDoc {
                             pw.Padding(
                                 padding: const pw.EdgeInsets.symmetric(
                                     horizontal: 4),
-                                child: pw.Text(CurrencyFormat.convertToIdr(
-                                    data[index]['gaji_pokok'], 0))),
+                                child:
+                                    pw.Text(toIdr(data[index]['gaji_pokok']))),
                             pw.Padding(
                                 padding: const pw.EdgeInsets.symmetric(
                                     horizontal: 4),
-                                child: pw.Text(CurrencyFormat.convertToIdr(
-                                    data[index]['bonus_gaji'], 0))),
+                                child:
+                                    pw.Text(toIdr(data[index]['bonus_gaji']))),
                             pw.Padding(
                                 padding: const pw.EdgeInsets.symmetric(
                                     horizontal: 4),
-                                child: pw.Text(CurrencyFormat.convertToIdr(
-                                    data[index]['ppn_gaji'], 0))),
+                                child: pw.Text(toIdr(data[index]['ppn_gaji']))),
                             pw.Padding(
                                 padding: const pw.EdgeInsets.symmetric(
                                     horizontal: 4),
-                                child: pw.Text(CurrencyFormat.convertToIdr(
-                                    data[index]['total_gaji'], 0))),
+                                child:
+                                    pw.Text(toIdr(data[index]['total_gaji']))),
                           ],
                         );
                       },
                     ),
                   ),
+                  pw.Table(
+                    columnWidths: {
+                      0: const pw.FlexColumnWidth(1),
+                      1: const pw.FlexColumnWidth(4),
+                      2: const pw.FlexColumnWidth(5),
+                      3: const pw.FlexColumnWidth(3),
+                      4: const pw.FlexColumnWidth(4),
+                      5: const pw.FlexColumnWidth(4),
+                      6: const pw.FlexColumnWidth(4),
+                      7: const pw.FlexColumnWidth(4),
+                    },
+                    border: pw.TableBorder.all(),
+                    children: [
+                      pw.TableRow(
+                        children: [
+                          pw.Padding(
+                            padding:
+                                const pw.EdgeInsets.symmetric(horizontal: 4),
+                            child: pw.Center(child: pw.Text("")),
+                          ),
+                          pw.Padding(
+                            padding:
+                                const pw.EdgeInsets.symmetric(horizontal: 4),
+                            child: pw.Center(child: pw.Text("")),
+                          ),
+                          pw.Padding(
+                            padding:
+                                const pw.EdgeInsets.symmetric(horizontal: 4),
+                            child: pw.Center(child: pw.Text("")),
+                          ),
+                          pw.Padding(
+                            padding:
+                                const pw.EdgeInsets.symmetric(horizontal: 4),
+                            child: pw.Center(child: pw.Text("")),
+                          ),
+                          pw.Padding(
+                            padding:
+                                const pw.EdgeInsets.symmetric(horizontal: 4),
+                            child: pw.Center(child: pw.Text("")),
+                          ),
+                          pw.Padding(
+                            padding:
+                                const pw.EdgeInsets.symmetric(horizontal: 4),
+                            child: pw.Center(child: pw.Text("")),
+                          ),
+                          pw.Padding(
+                            padding:
+                                const pw.EdgeInsets.symmetric(horizontal: 4),
+                            child: pw.Text("Total Gaji:"),
+                          ),
+                          pw.Padding(
+                            padding:
+                                const pw.EdgeInsets.symmetric(horizontal: 4),
+                            child: pw.Text(toIdr(totalGajiKaryawan)),
+                          ),
+                        ],
+                      ),
+                    ],
+                  )
                 ],
               ),
             )

@@ -59,139 +59,57 @@ class _GajiKaryawanPageState extends State<GajiKaryawanPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.nama),
-        ),
-        body: PaginatedDataTable(
-          sortAscending: sortAsc,
-          sortColumnIndex: colIndex,
-          rowsPerPage: 10,
-          columns: [
-            DataColumn(
-              label: const Text("No"),
-              onSort: (columnIndex, ascending) {
-                _sort((map) => map['no'], columnIndex, ascending);
-              },
-            ),
-            DataColumn(
-              label: const Text("Jabatan"),
-              onSort: (columnIndex, ascending) {
-                _sort((map) => map['jabatan'], columnIndex, ascending);
-              },
-            ),
-            DataColumn(
-              label: const Text("Gaji Pokok"),
-              onSort: (columnIndex, ascending) {
-                _sort((map) => map['gaji_pokok'], columnIndex, ascending);
-              },
-            ),
-            DataColumn(
-              label: const Text("Bonus Gaji"),
-              onSort: (columnIndex, ascending) {
-                _sort((map) => map['bonus_gaji'], columnIndex, ascending);
-              },
-            ),
-            DataColumn(
-              label: const Text("PPN"),
-              onSort: (columnIndex, ascending) {
-                _sort((map) => map['ppn_gaji'], columnIndex, ascending);
-              },
-            ),
-            DataColumn(
-              label: const Text("Total Gaji"),
-              onSort: (columnIndex, ascending) {
-                _sort((map) => map['total_gaji'], columnIndex, ascending);
-              },
-            ),
-            DataColumn(
-              label: const Text("Tanggal Gajian"),
-              onSort: (columnIndex, ascending) {
-                _sort((map) => map['tgl_laporan'], columnIndex, ascending);
-              },
-            ),
-          ],
-          source: dataSource!,
-        ));
-    //   StreamBuilder<List<Laporan>>(
-    //     stream: FirestoreService().getAllLaporan(),
-    //     builder: (context, snapshot) {
-    //       if (snapshot.connectionState == ConnectionState.waiting) {
-    //         return const Center(child: CircularProgressIndicator());
-    //       } else if (snapshot.hasData) {
-    //         final data = snapshot.data!;
-    //         gajiKaryawan!.clear();
-    //         for (var element in data) {
-    //           final mapData = element.listGajiKaryawan
-    //               .where((map) => map['nip'] == widget.nip);
-    //           if (mapData.isNotEmpty) {
-    //             gajiKaryawan!.add({
-    //               "gaji_karyawan": mapData.first,
-    //               "tgl_laporan":
-    //                   DateFormat("dd-MM-yyyy").format(element.tglLaporan!),
-    //             });
-    //           }
-    //         }
-    //         // print(gajiKaryawan);
-    //         if (gajiKaryawan!.isNotEmpty) {
-    //           return PaginatedDataTable(
-    //             sortAscending: sortAsc,
-    //             sortColumnIndex: colIndex,
-    //             rowsPerPage: 10,
-    //             columns: [
-    //               DataColumn(
-    //                 label: const Text("No"),
-    //                 onSort: (columnIndex, ascending) {
-    //                   _sort((map) => map['no'], columnIndex, ascending);
-    //                 },
-    //               ),
-    //               DataColumn(
-    //                 label: const Text("Jabatan"),
-    //                 onSort: (columnIndex, ascending) {
-    //                   _sort((map) => map['jabatan'], columnIndex, ascending);
-    //                 },
-    //               ),
-    //               DataColumn(
-    //                 label: const Text("Gaji Pokok"),
-    //                 onSort: (columnIndex, ascending) {
-    //                   _sort((map) => map['gaji_pokok'], columnIndex, ascending);
-    //                 },
-    //               ),
-    //               DataColumn(
-    //                 label: const Text("Bonus Gaji"),
-    //                 onSort: (columnIndex, ascending) {
-    //                   _sort((map) => map['bonus_gaji'], columnIndex, ascending);
-    //                 },
-    //               ),
-    //               DataColumn(
-    //                 label: const Text("PPN"),
-    //                 onSort: (columnIndex, ascending) {
-    //                   _sort((map) => map['ppn_gaji'], columnIndex, ascending);
-    //                 },
-    //               ),
-    //               DataColumn(
-    //                 label: const Text("Total Gaji"),
-    //                 onSort: (columnIndex, ascending) {
-    //                   _sort((map) => map['total_gaji'], columnIndex, ascending);
-    //                 },
-    //               ),
-    //               DataColumn(
-    //                 label: const Text("Tanggal Gajian"),
-    //                 onSort: (columnIndex, ascending) {
-    //                   _sort(
-    //                       (map) => map['tgl_laporan'], columnIndex, ascending);
-    //                 },
-    //               ),
-    //             ],
-    //             source: dataSource!,
-    //           );
-    //         } else {
-    //           return const Center(child: Text('Karyawan belum gajian.'));
-    //         }
-    //       }
-    //       return const Center(child: CircularProgressIndicator());
-    //     },
-    //   ),
-    // );
+      appBar: AppBar(
+        title: Text(widget.nama),
+      ),
+      body: PaginatedDataTable(
+        sortAscending: sortAsc,
+        sortColumnIndex: colIndex,
+        rowsPerPage: 10,
+        columns: [
+          const DataColumn(
+            label: Text("No"),
+          ),
+          DataColumn(
+            label: const Text("Jabatan"),
+            onSort: (columnIndex, ascending) {
+              _sort((map) => map['jabatan'], columnIndex, ascending);
+            },
+          ),
+          DataColumn(
+            label: const Text("Gaji Pokok"),
+            onSort: (columnIndex, ascending) {
+              _sort((map) => map['gaji_pokok'], columnIndex, ascending);
+            },
+          ),
+          DataColumn(
+            label: const Text("Bonus Gaji"),
+            onSort: (columnIndex, ascending) {
+              _sort((map) => map['bonus_gaji'], columnIndex, ascending);
+            },
+          ),
+          DataColumn(
+            label: const Text("PPN"),
+            onSort: (columnIndex, ascending) {
+              _sort((map) => map['ppn_gaji'], columnIndex, ascending);
+            },
+          ),
+          DataColumn(
+            label: const Text("Total Gaji"),
+            onSort: (columnIndex, ascending) {
+              _sort((map) => map['total_gaji'], columnIndex, ascending);
+            },
+          ),
+          DataColumn(
+            label: const Text("Tanggal Gajian"),
+            onSort: (columnIndex, ascending) {
+              _sort((map) => map['tgl_laporan'], columnIndex, ascending);
+            },
+          ),
+        ],
+        source: dataSource!,
+      ),
+    );
   }
 }
 
@@ -204,7 +122,6 @@ class DataSource extends DataTableSource {
     (index) {
       final karyawan = dataGaji[index]['gaji_karyawan'];
       return {
-        "no": "${index + 1}",
         "jabatan": karyawan['jabatan'],
         "gaji_pokok": karyawan['gaji_pokok'],
         "bonus_gaji": karyawan['bonus_gaji'],
@@ -239,7 +156,7 @@ class DataSource extends DataTableSource {
   @override
   DataRow getRow(int index) {
     return DataRow(cells: [
-      DataCell(Text(_data[index]['no'])),
+      DataCell(Text("${index + 1}")),
       DataCell(Text(_data[index]['jabatan'])),
       DataCell(
         Text(CurrencyFormat.convertToIdr(_data[index]['gaji_pokok'], 0)),

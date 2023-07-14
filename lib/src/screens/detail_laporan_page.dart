@@ -19,6 +19,7 @@ class _DetailLaporanGajiPageState extends State<DetailLaporanGajiPage> {
   bool sortAsc = true;
   int colIndex = 0;
   String? sortedField;
+  DateTime? tglLaporan;
 
   final snackBar = ShowSnackBar();
 
@@ -26,6 +27,7 @@ class _DetailLaporanGajiPageState extends State<DetailLaporanGajiPage> {
   void initState() {
     // TODO: implement initState
     dataSource = LaporanSource(laporan: widget.dataLaporan);
+    tglLaporan = widget.dataLaporan.tglLaporan!;
     super.initState();
   }
 
@@ -43,27 +45,21 @@ class _DetailLaporanGajiPageState extends State<DetailLaporanGajiPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Laporan Bulan ${widget.dataLaporan.tglLaporan!.month}"),
+        title: Text("Laporan Bulan ${tglLaporan!.month}"),
       ),
       body: PaginatedDataTable(
         sortAscending: sortAsc,
         sortColumnIndex: colIndex,
         header: Text(
-          "Laporan Tanggal\n${DateFormat('dd-MM-yyyy').format(
-            widget.dataLaporan.tglLaporan!.subtract(
-              const Duration(
-                days: 30,
-              ),
-            ),
-          )} - ${DateFormat('dd-MM-yyyy').format(widget.dataLaporan.tglLaporan!)}",
+          "Laporan Tanggal\n${DateFormat('dd-MM-yyyy').format(tglLaporan!)} - ${DateFormat('dd-MM-yyyy').format(DateTime(tglLaporan!.year, tglLaporan!.month + 1, tglLaporan!.day))}",
           style: const TextStyle(fontSize: 14),
         ),
         actions: [
           IconButton(
               onPressed: () {
                 final pdf = PdfDoc();
-                pdf.createPdf(dataSource!.getData,
-                    widget.dataLaporan.tglLaporan!, sortedField, sortAsc);
+                pdf.createPdf(
+                    dataSource!.getData, tglLaporan!, sortedField, sortAsc);
                 snackBar.showMsg(context, 'Laporan berhasil di export');
               },
               icon: const Icon(Icons.picture_as_pdf))

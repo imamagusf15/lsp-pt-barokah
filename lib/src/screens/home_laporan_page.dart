@@ -84,7 +84,7 @@ class _LaporanPageState extends State<LaporanPage> {
 
   @override
   Widget build(BuildContext context) {
-    final listLaporan = Provider.of<List<Laporan>?>(context) ?? [];
+    final listLaporan = Provider.of<List<Laporan>>(context);
     return SingleChildScrollView(
       padding: const EdgeInsets.all(8.0),
       physics: const NeverScrollableScrollPhysics(),
@@ -104,8 +104,7 @@ class _LaporanPageState extends State<LaporanPage> {
                           borderRadius: BorderRadius.circular(12)),
                       leading:
                           CircleAvatar(child: Text((index + 1).toString())),
-                      title: Text(
-                          "Laporan Bulan ${DateFormat("MM").format(laporan.tglLaporan!)}"),
+                      title: Text("Laporan Bulan ${laporan.tglLaporan!.month}"),
                       onTap: () => Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) =>

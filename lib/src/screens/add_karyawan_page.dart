@@ -61,7 +61,7 @@ class _AddKaryawanPageState extends State<AddKaryawanPage> {
                       fontSize: 16),
                 ),
                 InputFormField(
-                  validator: (field) => validator.validateField(field: field!),
+                  validator: (field) => validator.validateNip(nip: field!),
                   controller: nipController,
                   keyboardType: TextInputType.number,
                   maxLength: 15,
@@ -75,7 +75,7 @@ class _AddKaryawanPageState extends State<AddKaryawanPage> {
                       fontSize: 16),
                 ),
                 InputFormField(
-                  validator: (field) => validator.validateField(field: field!),
+                  validator: (field) => validator.validateNama(nama: field!),
                   controller: namaController,
                   keyboardType: TextInputType.name,
                   maxLength: 25,
@@ -209,7 +209,7 @@ class _AddKaryawanPageState extends State<AddKaryawanPage> {
                       fontSize: 16),
                 ),
                 InputFormField(
-                  validator: (field) => validator.validateField(field: field!),
+                  validator: (field) => validator.validateTelp(noTelp: field!),
                   controller: telpController,
                   keyboardType: TextInputType.phone,
                   maxLength: 15,
