@@ -1,19 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Laporan {
-  String laporanId;
+  String? id;
   List<dynamic> listGajiKaryawan;
   DateTime? tglLaporan;
 
   Laporan({
-    required this.laporanId,
+    this.id,
     required this.listGajiKaryawan,
     required this.tglLaporan,
   });
 
-  factory Laporan.fromFirestore(Map<String, dynamic> map) {
+  factory Laporan.fromFirestore(
+      QueryDocumentSnapshot<Map<String, dynamic>> doc) {
+    final map = doc.data();
     return Laporan(
-      laporanId: map['laporan_id'],
+      id: doc.reference.id,
       listGajiKaryawan: map['list_karyawan'] as List<dynamic>,
       tglLaporan: (map['tgl_laporan'] as Timestamp).toDate(),
     );
@@ -21,7 +23,6 @@ class Laporan {
 
   Map<String, dynamic> laporanToMap() {
     return {
-      'laporan_id': laporanId,
       'list_karyawan': listGajiKaryawan
           .map(
             (e) => {

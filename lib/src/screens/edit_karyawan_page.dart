@@ -7,10 +7,9 @@ import 'package:lsp_pt_barokah/src/widgets/inputformfield.dart';
 import 'package:lsp_pt_barokah/src/widgets/show_snackbar.dart';
 
 class EditKaryawanPage extends StatefulWidget {
-  const EditKaryawanPage({super.key, required this.karyawan, required this.id});
+  const EditKaryawanPage({super.key, required this.karyawan});
 
   final Karyawan karyawan;
-  final String id;
 
   @override
   State<EditKaryawanPage> createState() => _EditKaryawanPageState();
@@ -30,23 +29,27 @@ class _EditKaryawanPageState extends State<EditKaryawanPage> {
   String? jenisKelamin;
   String? jabatan;
 
+  Karyawan? karyawan;
+
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
-    final karyawan = widget.karyawan;
+    karyawan = widget.karyawan;
 
-    jenisKelamin = karyawan.jenisKelamin;
-    jabatan = karyawan.jabatan;
+    jenisKelamin = karyawan!.jenisKelamin;
+    jabatan = karyawan!.jabatan;
 
-    nipController.text = karyawan.nip;
-    namaController.text = karyawan.nama;
-    dateController.text = DateFormat("dd-MM-yyyy").format((karyawan.tglLahir));
-    alamatController.text = karyawan.alamat;
-    telpController.text = karyawan.noTelp;
+    nipController.text = karyawan!.nip;
+    namaController.text = karyawan!.nama;
+    dateController.text = DateFormat("dd-MM-yyyy").format((karyawan!.tglLahir));
+    alamatController.text = karyawan!.alamat;
+    telpController.text = karyawan!.noTelp;
   }
 
   @override
   void dispose() {
+    // TODO: implement dispose
     nipController.dispose();
     namaController.dispose();
     dateController.dispose();
@@ -57,13 +60,13 @@ class _EditKaryawanPageState extends State<EditKaryawanPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text("Update"),
-        ),
-        backgroundColor: Colors.blue,
-        body: SingleChildScrollView(
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Update"),
+      ),
+      backgroundColor: Colors.blue,
+      body: SafeArea(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
           child: Form(
             key: formKey,
@@ -261,6 +264,7 @@ class _EditKaryawanPageState extends State<EditKaryawanPage> {
                           DateFormat("dd-MM-yyyy").parse(dateController.text);
                       if (formKey.currentState!.validate()) {
                         final newKaryawan = Karyawan(
+                          id: karyawan!.id,
                           nip: nipController.text,
                           nama: namaController.text,
                           tglLahir: tglLahir,
@@ -272,7 +276,7 @@ class _EditKaryawanPageState extends State<EditKaryawanPage> {
                           bonusGaji: bonusGaji,
                         );
 
-                        db.updateKaryawan(newKaryawan);
+                        db.addKaryawan(newKaryawan);
 
                         snackBar.showMsg(context, 'Data berhasil diubah');
                       } else {

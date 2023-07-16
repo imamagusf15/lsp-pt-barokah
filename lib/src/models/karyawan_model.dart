@@ -1,12 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Karyawan {
+  String? id;
   String nip, nama, jabatan, jenisKelamin, alamat, noTelp;
   int gajiPokok;
   double bonusGaji;
   DateTime tglLahir;
 
   Karyawan({
+    this.id,
     required this.nip,
     required this.nama,
     required this.tglLahir,
@@ -18,8 +20,11 @@ class Karyawan {
     required this.bonusGaji,
   });
 
-  factory Karyawan.fromFirestore(Map<String, dynamic> map) {
+  factory Karyawan.fromFirestore(
+      QueryDocumentSnapshot<Map<String, dynamic>> doc) {
+    final map = doc.data();
     return Karyawan(
+      id: doc.reference.id,
       nip: map['nip'],
       nama: map['nama'],
       tglLahir: (map['tgl_lahir'] as Timestamp).toDate(),

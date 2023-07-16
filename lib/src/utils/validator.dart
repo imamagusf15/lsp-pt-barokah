@@ -10,8 +10,6 @@ class Validator {
     final regexp = RegExp(r'[0-9]');
     if (nip.isEmpty) {
       return 'Field tidak boleh kosong';
-    } else if (nip.length != 15) {
-      return 'NIP tidak boleh kurang dari 15 digit';
     } else if (!nip.contains(regexp)) {
       return 'NIP hanya terdiri dari angka';
     } else {

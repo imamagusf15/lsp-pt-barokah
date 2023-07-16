@@ -176,9 +176,9 @@ class LaporanSource extends DataTableSource {
         Text(CurrencyFormat.convertToIdr(_data[index]['gaji_pokok'], 0)),
       ),
       DataCell(
-        Text(CurrencyFormat.convertToIdr(_data[index]['bonus_gaji'], 0)),
+        Center(child: Text("${(_data[index]['bonus_gaji'] * 100).toInt()}%")),
       ),
-      DataCell(Text(CurrencyFormat.convertToIdr(_data[index]['ppn_gaji'], 0))),
+      DataCell(Text("${(_data[index]['ppn_gaji'] * 100).toInt()}%")),
       DataCell(
           Text(CurrencyFormat.convertToIdr(_data[index]['total_gaji'], 0))),
     ]);

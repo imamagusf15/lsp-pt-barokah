@@ -58,12 +58,12 @@ class PdfDoc {
                   pw.Table(
                     columnWidths: {
                       0: const pw.FlexColumnWidth(1),
-                      1: const pw.FlexColumnWidth(4),
+                      1: const pw.FlexColumnWidth(5),
                       2: const pw.FlexColumnWidth(5),
                       3: const pw.FlexColumnWidth(3),
                       4: const pw.FlexColumnWidth(4),
-                      5: const pw.FlexColumnWidth(4),
-                      6: const pw.FlexColumnWidth(4),
+                      5: const pw.FlexColumnWidth(3),
+                      6: const pw.FlexColumnWidth(3),
                       7: const pw.FlexColumnWidth(4),
                     },
                     border: pw.TableBorder.all(),
@@ -86,12 +86,12 @@ class PdfDoc {
                   pw.Table(
                     columnWidths: {
                       0: const pw.FlexColumnWidth(1),
-                      1: const pw.FlexColumnWidth(4),
+                      1: const pw.FlexColumnWidth(5),
                       2: const pw.FlexColumnWidth(5),
                       3: const pw.FlexColumnWidth(3),
                       4: const pw.FlexColumnWidth(4),
-                      5: const pw.FlexColumnWidth(4),
-                      6: const pw.FlexColumnWidth(4),
+                      5: const pw.FlexColumnWidth(3),
+                      6: const pw.FlexColumnWidth(3),
                       7: const pw.FlexColumnWidth(4),
                     },
                     border: pw.TableBorder.all(),
@@ -100,11 +100,7 @@ class PdfDoc {
                       (index) {
                         return pw.TableRow(
                           children: [
-                            pw.Padding(
-                                padding: const pw.EdgeInsets.symmetric(
-                                    horizontal: 4),
-                                child:
-                                    pw.Center(child: pw.Text("${index + 1}"))),
+                            pw.Center(child: pw.Text("${index + 1}")),
                             pw.Padding(
                                 padding: const pw.EdgeInsets.symmetric(
                                     horizontal: 4),
@@ -113,25 +109,18 @@ class PdfDoc {
                                 padding: const pw.EdgeInsets.symmetric(
                                     horizontal: 4),
                                 child: pw.Text(data[index]['nama'])),
-                            pw.Padding(
-                                padding: const pw.EdgeInsets.symmetric(
-                                    horizontal: 4),
-                                child: pw.Center(
-                                    child: pw.Text(data[index]['jabatan']))),
+                            pw.Center(child: pw.Text(data[index]['jabatan'])),
                             pw.Padding(
                                 padding: const pw.EdgeInsets.symmetric(
                                     horizontal: 4),
                                 child:
                                     pw.Text(toIdr(data[index]['gaji_pokok']))),
-                            pw.Padding(
-                                padding: const pw.EdgeInsets.symmetric(
-                                    horizontal: 4),
-                                child:
-                                    pw.Text(toIdr(data[index]['bonus_gaji']))),
-                            pw.Padding(
-                                padding: const pw.EdgeInsets.symmetric(
-                                    horizontal: 4),
-                                child: pw.Text(toIdr(data[index]['ppn_gaji']))),
+                            pw.Center(
+                                child: pw.Text(
+                                    "${(data[index]['bonus_gaji'] * 100).toInt()}%")),
+                            pw.Center(
+                                child: pw.Text(
+                                    "${(data[index]['ppn_gaji'] * 100).toInt()}%")),
                             pw.Padding(
                                 padding: const pw.EdgeInsets.symmetric(
                                     horizontal: 4),
@@ -145,53 +134,25 @@ class PdfDoc {
                   pw.Table(
                     columnWidths: {
                       0: const pw.FlexColumnWidth(1),
-                      1: const pw.FlexColumnWidth(4),
+                      1: const pw.FlexColumnWidth(5),
                       2: const pw.FlexColumnWidth(5),
                       3: const pw.FlexColumnWidth(3),
                       4: const pw.FlexColumnWidth(4),
-                      5: const pw.FlexColumnWidth(4),
-                      6: const pw.FlexColumnWidth(4),
+                      5: const pw.FlexColumnWidth(3),
+                      6: const pw.FlexColumnWidth(3),
                       7: const pw.FlexColumnWidth(4),
                     },
                     border: pw.TableBorder.all(),
                     children: [
                       pw.TableRow(
                         children: [
-                          pw.Padding(
-                            padding:
-                                const pw.EdgeInsets.symmetric(horizontal: 4),
-                            child: pw.Center(child: pw.Text("")),
-                          ),
-                          pw.Padding(
-                            padding:
-                                const pw.EdgeInsets.symmetric(horizontal: 4),
-                            child: pw.Center(child: pw.Text("")),
-                          ),
-                          pw.Padding(
-                            padding:
-                                const pw.EdgeInsets.symmetric(horizontal: 4),
-                            child: pw.Center(child: pw.Text("")),
-                          ),
-                          pw.Padding(
-                            padding:
-                                const pw.EdgeInsets.symmetric(horizontal: 4),
-                            child: pw.Center(child: pw.Text("")),
-                          ),
-                          pw.Padding(
-                            padding:
-                                const pw.EdgeInsets.symmetric(horizontal: 4),
-                            child: pw.Center(child: pw.Text("")),
-                          ),
-                          pw.Padding(
-                            padding:
-                                const pw.EdgeInsets.symmetric(horizontal: 4),
-                            child: pw.Center(child: pw.Text("")),
-                          ),
-                          pw.Padding(
-                            padding:
-                                const pw.EdgeInsets.symmetric(horizontal: 4),
-                            child: pw.Text("Total Gaji:"),
-                          ),
+                          pw.Center(child: pw.Text("")),
+                          pw.Center(child: pw.Text("")),
+                          pw.Center(child: pw.Text("")),
+                          pw.Center(child: pw.Text("")),
+                          pw.Center(child: pw.Text("")),
+                          pw.Center(child: pw.Text("")),
+                          pw.Center(child: pw.Text("Total Gaji:")),
                           pw.Padding(
                             padding:
                                 const pw.EdgeInsets.symmetric(horizontal: 4),

@@ -28,7 +28,7 @@ class _AddKaryawanPageState extends State<AddKaryawanPage> {
   String jenisKelamin = 'L';
   String jabatan = 'Staff';
 
-  final karyawanCollection = FirestoreService();
+  final db = FirestoreService();
 
   @override
   void dispose() {
@@ -43,10 +43,10 @@ class _AddKaryawanPageState extends State<AddKaryawanPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.blue,
-        body: SingleChildScrollView(
+    return Scaffold(
+      backgroundColor: Colors.blue,
+      body: SafeArea(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
           child: Form(
             key: _formKey,
@@ -273,7 +273,7 @@ class _AddKaryawanPageState extends State<AddKaryawanPage> {
                               bonusGaji: bonusGaji,
                             );
 
-                            karyawanCollection.addKaryawan(newKaryawan);
+                            db.addKaryawan(newKaryawan);
                             snackBar.showMsg(context, 'Data berhasil ditambah');
                           }
                           nipController.clear();

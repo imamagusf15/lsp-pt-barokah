@@ -47,7 +47,6 @@ class KaryawanPage extends StatelessWidget {
                                 MaterialPageRoute(
                                   builder: (context) => EditKaryawanPage(
                                     karyawan: docs,
-                                    id: docs.nip,
                                   ),
                                 ),
                               );

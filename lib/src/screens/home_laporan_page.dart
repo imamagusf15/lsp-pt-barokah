@@ -36,10 +36,6 @@ class _LaporanPageState extends State<LaporanPage> {
     '12'
   ];
 
-  final _chars =
-      'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
-  final _rnd = Random();
-
   @override
   void initState() {
     // TODO: implement initState
@@ -52,21 +48,16 @@ class _LaporanPageState extends State<LaporanPage> {
     super.initState();
   }
 
-  setRandomId(int length) {
-    return String.fromCharCodes(Iterable.generate(
-        length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
-  }
-
   setGaji(List<Karyawan> listKaryawan) {
     List<Map<String, dynamic>> listGajiKaryawan = [];
     for (int i = 0; i < listKaryawan.length; i++) {
       int gajiPokok = listKaryawan[i].gajiPokok;
       double bonusGaji = listKaryawan[i].bonusGaji;
-      int totalGaji = 0;
       double ppnGaji = 0.05;
-      bonusGaji = gajiPokok * bonusGaji;
-      ppnGaji = (gajiPokok + bonusGaji) * ppnGaji;
-      totalGaji = gajiPokok + bonusGaji.toInt() - ppnGaji.toInt();
+      final totalBonusGaji = gajiPokok * bonusGaji;
+      final totalPpnGaji = (gajiPokok + totalBonusGaji) * ppnGaji;
+      final totalGaji =
+          gajiPokok + totalBonusGaji.toInt() - totalPpnGaji.toInt();
 
       final dataKaryawan = {
         "nip": listKaryawan[i].nip,
@@ -80,6 +71,13 @@ class _LaporanPageState extends State<LaporanPage> {
       listGajiKaryawan.add(dataKaryawan);
     }
     return listGajiKaryawan;
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    listKaryawan.clear();
   }
 
   @override
@@ -124,7 +122,7 @@ class _LaporanPageState extends State<LaporanPage> {
                                 actions: [
                                   TextButton(
                                     onPressed: () {
-                                      db.deleteLaporan(laporan.laporanId);
+                                      db.deleteLaporan(laporan.id);
                                       Navigator.of(context).pop();
                                     },
                                     child: const Text(
@@ -217,7 +215,6 @@ class _LaporanPageState extends State<LaporanPage> {
                                                   DateFormat("yyyy-MM").parse(
                                                       "${DateTime.now().year}-${selectedMonth!}");
                                               final newLaporan = Laporan(
-                                                  laporanId: setRandomId(10),
                                                   listGajiKaryawan:
                                                       setGaji(listKaryawan),
                                                   tglLaporan: tglLaporan);
